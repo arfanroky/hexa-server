@@ -9,7 +9,7 @@ let userData;
 const url = 'https://jsonplaceholder.typicode.com/users';
 const getUser = async () => {
   const { data } = await axios.get(url).catch((err) => {
-    console.log(err);
+    console.log('error',err);
   });
 
   userData = data;
