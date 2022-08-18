@@ -1,4 +1,5 @@
 const http = require('http');
+// const cors = require('cors')
 const axios = require('axios').default;
 const port = process.env.PORT || 5000;
 
@@ -15,17 +16,38 @@ const getUser = async () => {
 getUser();
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/api/users') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(userData));
-  } else {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end(
-      JSON.stringify({
-        message: 'Not found',
-      })
-    );
+  const headers = {
+    'Access-Control-Allow-Origin': '*' /* @dev First, read about security */,
+    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+    'Access-Control-Max-Age': 2592000, // 30 days
+    /** add other headers as per requirement */
+    'Content-Type': 'application/json',
+  };
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, headers);
+    res.end();
+    return;
   }
+
+  if (['GET', 'POST'].indexOf(req.method) > -1) {
+    if (req.url === '/api/users') {
+      res.writeHead(200, headers);
+      res.end(JSON.stringify(userData));
+      return;
+    } else {
+      res.writeHead(404, headers);
+      res.end(
+        JSON.stringify({
+          error: 'not found',
+        })
+      );
+      return;
+    }
+  }
+
+  res.writeHead(405, headers);
+  res.end(`${req.method} is not allowed for the request.`);
 });
 
 server.listen(port, () => {
