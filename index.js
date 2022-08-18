@@ -1,11 +1,12 @@
 const http = require('http');
-// const cors = require('cors')
 const axios = require('axios').default;
 const port = process.env.PORT || 5000;
 
-const url = 'https://jsonplaceholder.typicode.com/users';
+
+
 let userData;
 
+const url = 'https://jsonplaceholder.typicode.com/users';
 const getUser = async () => {
   const { data } = await axios.get(url).catch((err) => {
     console.log(err);
